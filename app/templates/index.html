@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Todo List</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 50px auto; background: #1a1a2e; color: white; }
+        h1 { color: #e94560; }
+        .cloud-badge { background: #16213e; padding: 5px 15px; border-radius: 20px; font-size: 14px; }
+        input[type=text] { padding: 10px; width: 70%; border-radius: 5px; border: none; }
+        button { padding: 10px 20px; background: #e94560; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        .todo-item { background: #16213e; margin: 10px 0; padding: 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; }
+        .done { text-decoration: line-through; opacity: 0.5; }
+    </style>
+</head>
+<body>
+    <h1>📝 Todo List</h1>
+    <span class="cloud-badge">☁️ Cloud : <strong>{{ cloud }}</strong></span>
+    <br><br>
+    <form action="/add" method="post">
+        <input type="text" name="task" placeholder="Nouvelle tâche..." required>
+        <button type="submit">Ajouter</button>
+    </form>
+    <br>
+    {% for todo in todos %}
+    <div class="todo-item">
+        <span class="{{ 'done' if todo.done else '' }}">{{ todo.task }}</span>
+        <div>
+            <form action="/toggle/{{ todo.id }}" method="post" style="display:inline">
+                <button>{{ '↩️' if todo.done else '✅' }}</button>
+            </form>
+            <form action="/delete/{{ todo.id }}" method="post" style="display:inline">
+                <button style="background:#c0392b">🗑️</button>
+            </form>
+        </div>
+    </div>
+    {% endfor %}
+</body>
+</html>
