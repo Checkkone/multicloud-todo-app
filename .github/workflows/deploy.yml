@@ -1,0 +1,75 @@
+name: Deploy MultiCloud
+
+# Se déclenche à chaque push sur la branche main
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+
+  # -------------------------------------------------------
+  # JOB 1 : Construire l'image Docker et la pousser sur Docker Hub
+  # -------------------------------------------------------
+  build-and-push:
+    name: Build & Push Docker Image
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Récupérer le code du repo
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. Se connecter à Docker Hub
+      - name: Login to Docker Hub
+        run: |
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login \
+            -u "${{ secrets.DOCKER_USERNAME }}" \
+            --password-stdin
+
+      # 3. Construire l'image Docker
+      - name: Build Docker image
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/multicloud-todolist-app-todo-app:latest .
+
+      # 4. Pousser l'image sur Docker Hub
+      - name: Push Docker image
+        run: |
+          docker push ${{ secrets.DOCKER_USERNAME }}/multicloud-todolist-app-todo-app:latest
+
+  # -------------------------------------------------------
+  # JOB 2 : Déclencher le redéploiement sur Render
+  # (attend que le Job 1 soit terminé)
+  # -------------------------------------------------------
+  deploy-render:
+    name: Deploy to Render
+    runs-on: ubuntu-latest
+    needs: build-and-push
+
+    steps:
+      - name: Trigger Render Deploy Hook
+        run: |
+          curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"
+          echo "Render deploy triggered ✅"
+
+  # -------------------------------------------------------
+  # JOB 3 : Redéployer sur Railway via CLI
+  # -------------------------------------------------------
+  deploy-railway:
+    name: Deploy to Railway
+    runs-on: ubuntu-latest
+    needs: build-and-push
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Railway CLI
+        run: |
+          npm install -g @railway/cli
+
+      - name: Deploy to Railway
+        run: |
+          railway up --detach
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
