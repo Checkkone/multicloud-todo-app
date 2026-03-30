@@ -1,39 +1,441 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <title>Todo List</title>
-    <style>
-        body { font-family: Arial, sans-serif; max-width: 600px; margin: 50px auto; background: #1a1a2e; color: white; }
-        h1 { color: #e94560; }
-        .cloud-badge { background: #16213e; padding: 5px 15px; border-radius: 20px; font-size: 14px; }
-        input[type=text] { padding: 10px; width: 70%; border-radius: 5px; border: none; }
-        button { padding: 10px 20px; background: #e94560; color: white; border: none; border-radius: 5px; cursor: pointer; }
-        .todo-item { background: #16213e; margin: 10px 0; padding: 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; }
-        .done { text-decoration: line-through; opacity: 0.5; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TaskFlow · {{ cloud }}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Instrument+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:         #080a0f;
+      --card:       #0e1118;
+      --card2:      #13181f;
+      --border:     rgba(255,255,255,0.06);
+      --border-h:   rgba(255,255,255,0.12);
+      --text:       #dde1ea;
+      --muted:      #4a5162;
+      --accent:     #5b8fff;
+      --accent-g:   #3d6fe8;
+      --green:      #42d392;
+      --red:        #f05b5b;
+      --amber:      #f0a050;
+      --radius:     14px;
+      --sans:       'Instrument Sans', sans-serif;
+      --display:    'Syne', sans-serif;
+    }
+
+    @keyframes fadeUp   { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes slideIn  { from{opacity:0;transform:translateX(-10px)} to{opacity:1;transform:translateX(0)} }
+    @keyframes glow     { 0%,100%{opacity:.6} 50%{opacity:1} }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      min-height: 100vh;
+      padding: 0 20px 80px;
+      /* dot grid */
+      background-image: radial-gradient(rgba(91,143,255,.12) 1px, transparent 1px);
+      background-size: 28px 28px;
+    }
+
+    .wrap { max-width: 660px; margin: 0 auto; }
+
+    /* ── Nav ── */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 30px 0 44px;
+      animation: fadeUp .45s ease both;
+    }
+
+    .logo {
+      font-family: var(--display);
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -.02em;
+      color: var(--text);
+    }
+    .logo span { color: var(--accent); }
+
+    .badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 7px 14px 7px 10px;
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+    .badge .live {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: glow 2s ease infinite;
+      flex-shrink: 0;
+    }
+    .badge strong { color: var(--accent); font-weight: 600; }
+
+    /* ── Hero ── */
+    .hero {
+      margin-bottom: 36px;
+      animation: fadeUp .45s .07s ease both;
+    }
+    .hero h1 {
+      font-family: var(--display);
+      font-size: clamp(2.6rem, 8vw, 4rem);
+      font-weight: 800;
+      line-height: 1.0;
+      letter-spacing: -.04em;
+      margin-bottom: 12px;
+    }
+    .hero h1 .hi { color: var(--accent); }
+    .hero p {
+      font-size: 14px;
+      color: var(--muted);
+      font-weight: 300;
+      letter-spacing: .01em;
+    }
+
+    /* ── Stats ── */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 28px;
+      animation: fadeUp .45s .12s ease both;
+    }
+    .stat {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 16px;
+      text-align: center;
+      transition: border-color .2s;
+    }
+    .stat:hover { border-color: var(--border-h); }
+    .stat .n {
+      font-family: var(--display);
+      font-size: 32px;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 5px;
+    }
+    .stat .n.blue  { color: var(--accent); }
+    .stat .n.green { color: var(--green); }
+    .stat .n.amber { color: var(--amber); }
+    .stat .l {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .09em;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    /* ── Form ── */
+    .form-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 32px;
+      animation: fadeUp .45s .17s ease both;
+    }
+    .form-row input {
+      flex: 1;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 15px 20px;
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 15px;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .form-row input::placeholder { color: var(--muted); }
+    .form-row input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(91,143,255,.13);
+    }
+    .form-row button {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius);
+      padding: 15px 22px;
+      font-family: var(--display);
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: .02em;
+      white-space: nowrap;
+      transition: background .2s, box-shadow .2s, transform .1s;
+    }
+    .form-row button:hover {
+      background: var(--accent-g);
+      box-shadow: 0 6px 24px rgba(91,143,255,.28);
+    }
+    .form-row button:active { transform: scale(.97); }
+
+    /* ── List header ── */
+    .list-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      animation: fadeUp .45s .2s ease both;
+    }
+    .list-header span {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .09em;
+      color: var(--muted);
+    }
+
+    /* ── Todo items ── */
+    .list { display: flex; flex-direction: column; gap: 7px; }
+
+    .item {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 15px 16px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color .2s, transform .15s;
+      animation: slideIn .2s ease both;
+    }
+    .item::after {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      background: var(--accent);
+      opacity: 0;
+      transition: opacity .2s;
+    }
+    .item:hover { border-color: var(--border-h); transform: translateX(3px); }
+    .item:hover::after { opacity: 1; }
+    .item.done { opacity: .55; }
+    .item.done::after { background: var(--green); opacity: .6; }
+
+    /* Toggle */
+    .toggle-form { display: contents; }
+    .toggle-btn {
+      width: 24px; height: 24px;
+      border-radius: 7px;
+      border: 1.5px solid var(--border-h);
+      background: transparent;
+      cursor: pointer;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all .18s;
+      padding: 0;
+    }
+    .toggle-btn:hover { border-color: var(--accent); background: rgba(91,143,255,.1); }
+    .item.done .toggle-btn { background: var(--green); border-color: var(--green); }
+    .check { display: none; }
+    .item.done .check { display: block; }
+
+    /* Task text + meta */
+    .task-body { flex: 1; min-width: 0; }
+    .task-text {
+      font-size: 15px;
+      font-weight: 400;
+      line-height: 1.4;
+      transition: color .2s;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .item.done .task-text {
+      text-decoration: line-through;
+      color: var(--muted);
+    }
+    .task-date {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 3px;
+      font-weight: 300;
+    }
+
+    /* Delete */
+    .del-form { display: contents; }
+    .del-btn {
+      width: 30px; height: 30px;
+      border-radius: 8px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      flex-shrink: 0;
+      transition: all .18s;
+      padding: 0;
+    }
+    .del-btn:hover { background: rgba(240,91,91,.15); color: var(--red); }
+
+    /* ── Empty ── */
+    .empty {
+      text-align: center;
+      padding: 60px 20px;
+      border: 1px dashed var(--border);
+      border-radius: 18px;
+      animation: fadeUp .4s ease both;
+    }
+    .empty-icon {
+      width: 52px; height: 52px;
+      background: var(--card2);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 18px;
+    }
+    .empty p { color: var(--muted); font-size: 15px; font-weight: 300; line-height: 1.7; }
+
+    /* ── Footer ── */
+    footer {
+      margin-top: 52px;
+      padding-top: 22px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: var(--muted);
+      animation: fadeUp .45s .25s ease both;
+    }
+    footer code {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      color: var(--accent);
+      padding: 3px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+    }
+
+    @media (max-width: 480px) {
+      .stats { grid-template-columns: repeat(3, 1fr); }
+      .form-row { flex-direction: column; }
+      .task-date { display: none; }
+    }
+  </style>
 </head>
 <body>
-    <h1>📝 Todo List</h1>
-    <span class="cloud-badge">☁️ Cloud : <strong>{{ cloud }}</strong></span>
-    <br><br>
-    <form action="/add" method="post">
-        <input type="text" name="task" placeholder="Nouvelle tâche..." required>
-        <button type="submit">Ajouter</button>
-    </form>
-    <br>
+<div class="wrap">
+
+  <!-- Nav -->
+  <nav>
+    <div class="logo">Task<span>Flow</span></div>
+    <div class="badge">
+      <span class="live"></span>
+      Actif sur <strong>{{ cloud }}</strong>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <div class="hero">
+    <h1>Mes tâches,<br><span class="hi">organisées.</span></h1>
+    <p>Application multi-cloud · Docker · GitHub Actions · {{ hostname }}</p>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats">
+    <div class="stat">
+      <div class="n blue">{{ total }}</div>
+      <div class="l">Total</div>
+    </div>
+    <div class="stat">
+      <div class="n green">{{ done_count }}</div>
+      <div class="l">Faites</div>
+    </div>
+    <div class="stat">
+      <div class="n amber">{{ pending }}</div>
+      <div class="l">Restantes</div>
+    </div>
+  </div>
+
+  <!-- Formulaire -->
+  <form class="form-row" action="/add" method="POST">
+    <input type="text" name="task" placeholder="Nouvelle tâche..." autocomplete="off" autofocus required>
+    <button type="submit">+ Ajouter</button>
+  </form>
+
+  <!-- Liste -->
+  {% if todos %}
+  <div class="list-header">
+    <span>{{ total }} tâche{{ 's' if total > 1 else '' }}</span>
+    <span>{{ done_count }} terminée{{ 's' if done_count > 1 else '' }}</span>
+  </div>
+
+  <div class="list">
     {% for todo in todos %}
-    <div class="todo-item">
-        <span class="{{ 'done' if todo.done else '' }}">{{ todo.task }}</span>
-        <div>
-            <form action="/toggle/{{ todo.id }}" method="post" style="display:inline">
-                <button>{{ '↩️' if todo.done else '✅' }}</button>
-            </form>
-            <form action="/delete/{{ todo.id }}" method="post" style="display:inline">
-                <button style="background:#c0392b">🗑️</button>
-            </form>
-        </div>
+    <div class="item {{ 'done' if todo.done else '' }}">
+
+      <!-- Toggle -->
+      <form class="toggle-form" action="/toggle/{{ todo.id }}" method="POST">
+        <button type="submit" class="toggle-btn">
+          <svg class="check" width="12" height="12" viewBox="0 0 12 12" fill="none">
+            <path d="M2 6l3 3 5-5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </form>
+
+      <!-- Texte -->
+      <div class="task-body">
+        <div class="task-text">{{ todo.task }}</div>
+        {% if todo.created_at is defined %}
+        <div class="task-date">{{ todo.created_at }}</div>
+        {% endif %}
+      </div>
+
+      <!-- Supprimer -->
+      <form class="del-form" action="/delete/{{ todo.id }}" method="POST">
+        <button type="submit" class="del-btn" title="Supprimer">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M2 2l10 10M12 2L2 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </form>
+
     </div>
     {% endfor %}
+  </div>
+
+  {% else %}
+  <div class="empty">
+    <div class="empty-icon">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+        <path d="M8 11l3 3 6-6" stroke="#5b8fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <rect x="2" y="2" width="18" height="18" rx="5" stroke="#5b8fff" stroke-width="1.5"/>
+      </svg>
+    </div>
+    <p>Aucune tâche pour l'instant.<br>Ajoute ta première tâche ci-dessus.</p>
+  </div>
+  {% endif %}
+
+  <!-- Footer -->
+  <footer>
+    <span>TaskFlow v{{ version }} · {{ cloud }}</span>
+    <code>GET /health</code>
+  </footer>
+
+</div>
 </body>
 </html>
