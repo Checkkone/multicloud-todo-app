@@ -5,335 +5,299 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TaskFlow · {{ cloud }}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Instrument+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Instrument+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:         #080a0f;
-      --card:       #0e1118;
-      --card2:      #13181f;
-      --border:     rgba(255,255,255,0.06);
-      --border-h:   rgba(255,255,255,0.12);
-      --text:       #dde1ea;
-      --muted:      #4a5162;
-      --accent:     #5b8fff;
-      --accent-g:   #3d6fe8;
-      --green:      #42d392;
-      --red:        #f05b5b;
-      --amber:      #f0a050;
-      --radius:     14px;
-      --sans:       'Instrument Sans', sans-serif;
-      --display:    'Syne', sans-serif;
+      --bg:       #07090e;
+      --card:     #0d1019;
+      --card2:    #12161f;
+      --border:   rgba(255,255,255,0.065);
+      --border-h: rgba(255,255,255,0.13);
+      --text:     #dde2ed;
+      --muted:    #48516a;
+      --accent:   #5b8fff;
+      --accent-d: #3d6fe8;
+      --green:    #3ecf8e;
+      --red:      #f05b5b;
+      --amber:    #f0a040;
+      --purple:   #a78bfa;
+      --r:        13px;
+      --sans:     'Instrument Sans', sans-serif;
+      --head:     'Syne', sans-serif;
     }
 
-    @keyframes fadeUp   { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
-    @keyframes slideIn  { from{opacity:0;transform:translateX(-10px)} to{opacity:1;transform:translateX(0)} }
-    @keyframes glow     { 0%,100%{opacity:.6} 50%{opacity:1} }
+    @keyframes fadeUp  { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes slideIn { from{opacity:0;transform:translateX(-10px)} to{opacity:1;transform:translateX(0)} }
+    @keyframes glow    { 0%,100%{opacity:.5} 50%{opacity:1} }
+    @keyframes fillBar { from{width:0} to{width:var(--w)} }
 
     body {
       background: var(--bg);
       color: var(--text);
       font-family: var(--sans);
       min-height: 100vh;
-      padding: 0 20px 80px;
-      /* dot grid */
-      background-image: radial-gradient(rgba(91,143,255,.12) 1px, transparent 1px);
-      background-size: 28px 28px;
+      padding: 0 18px 80px;
+      background-image: radial-gradient(rgba(91,143,255,.09) 1px, transparent 1px);
+      background-size: 26px 26px;
     }
 
-    .wrap { max-width: 660px; margin: 0 auto; }
+    .wrap { max-width: 720px; margin: 0 auto; }
 
     /* ── Nav ── */
     nav {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 30px 0 44px;
-      animation: fadeUp .45s ease both;
+      padding: 28px 0 40px;
+      animation: fadeUp .4s ease both;
     }
-
-    .logo {
-      font-family: var(--display);
-      font-size: 20px;
-      font-weight: 800;
-      letter-spacing: -.02em;
-      color: var(--text);
-    }
+    .logo { font-family: var(--head); font-size: 20px; font-weight: 800; letter-spacing: -.02em; }
     .logo span { color: var(--accent); }
 
     .badge {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 100px;
-      padding: 7px 14px 7px 10px;
-      font-size: 12px;
-      color: var(--muted);
-      font-weight: 500;
+      display: flex; align-items: center; gap: 7px;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 100px; padding: 6px 14px 6px 10px;
+      font-size: 12px; color: var(--muted); font-weight: 500;
     }
     .badge .live {
-      width: 7px; height: 7px;
-      border-radius: 50%;
-      background: var(--green);
-      animation: glow 2s ease infinite;
-      flex-shrink: 0;
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--green); animation: glow 2s ease infinite;
     }
     .badge strong { color: var(--accent); font-weight: 600; }
 
     /* ── Hero ── */
-    .hero {
-      margin-bottom: 36px;
-      animation: fadeUp .45s .07s ease both;
-    }
+    .hero { margin-bottom: 32px; animation: fadeUp .4s .06s ease both; }
     .hero h1 {
-      font-family: var(--display);
-      font-size: clamp(2.6rem, 8vw, 4rem);
-      font-weight: 800;
-      line-height: 1.0;
-      letter-spacing: -.04em;
-      margin-bottom: 12px;
+      font-family: var(--head);
+      font-size: clamp(2.4rem, 7vw, 3.8rem);
+      font-weight: 800; line-height: 1.0; letter-spacing: -.04em;
+      margin-bottom: 10px;
     }
-    .hero h1 .hi { color: var(--accent); }
-    .hero p {
-      font-size: 14px;
-      color: var(--muted);
-      font-weight: 300;
-      letter-spacing: .01em;
-    }
+    .hero h1 em { font-style: normal; color: var(--accent); }
+    .hero p { font-size: 13px; color: var(--muted); font-weight: 300; }
 
     /* ── Stats ── */
     .stats {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin-bottom: 28px;
-      animation: fadeUp .45s .12s ease both;
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 8px; margin-bottom: 24px;
+      animation: fadeUp .4s .1s ease both;
     }
     .stat {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 18px 16px;
-      text-align: center;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--r); padding: 16px 12px; text-align: center;
       transition: border-color .2s;
     }
     .stat:hover { border-color: var(--border-h); }
-    .stat .n {
-      font-family: var(--display);
-      font-size: 32px;
-      font-weight: 700;
-      line-height: 1;
-      margin-bottom: 5px;
+    .stat .n { font-family: var(--head); font-size: 28px; font-weight: 700; line-height: 1; margin-bottom: 4px; }
+    .stat .n.blue   { color: var(--accent); }
+    .stat .n.green  { color: var(--green); }
+    .stat .n.amber  { color: var(--amber); }
+    .stat .n.red    { color: var(--red); }
+    .stat .l { font-size: 10px; text-transform: uppercase; letter-spacing: .09em; color: var(--muted); font-weight: 600; }
+
+    /* ── Progress bar ── */
+    .progress-wrap {
+      margin-bottom: 28px;
+      animation: fadeUp .4s .13s ease both;
     }
-    .stat .n.blue  { color: var(--accent); }
-    .stat .n.green { color: var(--green); }
-    .stat .n.amber { color: var(--amber); }
-    .stat .l {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: .09em;
-      color: var(--muted);
-      font-weight: 600;
+    .progress-info {
+      display: flex; justify-content: space-between;
+      font-size: 12px; color: var(--muted); margin-bottom: 7px;
+    }
+    .progress-info strong { color: var(--green); }
+    .progress-track {
+      height: 6px; background: var(--card2);
+      border-radius: 100px; overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%; border-radius: 100px;
+      background: linear-gradient(90deg, var(--accent), var(--green));
+      --w: {{ progress }}%;
+      width: var(--w);
+      animation: fillBar .8s .3s ease both;
     }
 
-    /* ── Form ── */
-    .form-row {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 32px;
-      animation: fadeUp .45s .17s ease both;
+    /* ── Add form ── */
+    .add-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--r); padding: 20px;
+      margin-bottom: 24px;
+      animation: fadeUp .4s .16s ease both;
     }
-    .form-row input {
-      flex: 1;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 15px 20px;
-      color: var(--text);
-      font-family: var(--sans);
-      font-size: 15px;
-      outline: none;
+    .add-card .row1 { display: flex; gap: 10px; margin-bottom: 10px; }
+    .add-card .row2 { display: flex; gap: 10px; }
+
+    input[type=text], input[type=date], select {
+      background: var(--card2); border: 1px solid var(--border);
+      border-radius: 10px; padding: 11px 14px;
+      color: var(--text); font-family: var(--sans);
+      font-size: 14px; outline: none;
       transition: border-color .2s, box-shadow .2s;
     }
-    .form-row input::placeholder { color: var(--muted); }
-    .form-row input:focus {
+    input[type=text]  { flex: 1; }
+    input[type=date]  { width: 160px; color-scheme: dark; }
+    select            { flex: 1; cursor: pointer; }
+
+    input:focus, select:focus {
       border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(91,143,255,.13);
+      box-shadow: 0 0 0 3px rgba(91,143,255,.12);
     }
-    .form-row button {
-      background: var(--accent);
-      color: #fff;
-      border: none;
-      border-radius: var(--radius);
-      padding: 15px 22px;
-      font-family: var(--display);
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-      letter-spacing: .02em;
-      white-space: nowrap;
+    input::placeholder { color: var(--muted); }
+
+    .btn-add {
+      background: var(--accent); color: #fff; border: none;
+      border-radius: 10px; padding: 11px 22px;
+      font-family: var(--head); font-size: 14px; font-weight: 700;
+      cursor: pointer; white-space: nowrap;
       transition: background .2s, box-shadow .2s, transform .1s;
     }
-    .form-row button:hover {
-      background: var(--accent-g);
-      box-shadow: 0 6px 24px rgba(91,143,255,.28);
+    .btn-add:hover { background: var(--accent-d); box-shadow: 0 4px 20px rgba(91,143,255,.28); }
+    .btn-add:active { transform: scale(.97); }
+
+    /* ── Filters ── */
+    .filters {
+      display: flex; gap: 8px; flex-wrap: wrap;
+      margin-bottom: 20px;
+      animation: fadeUp .4s .2s ease both;
     }
-    .form-row button:active { transform: scale(.97); }
+    .filter-link {
+      padding: 7px 16px; border-radius: 100px;
+      border: 1px solid var(--border);
+      font-size: 12px; font-weight: 600; color: var(--muted);
+      text-decoration: none; transition: all .18s;
+      background: var(--card);
+    }
+    .filter-link:hover { border-color: var(--border-h); color: var(--text); }
+    .filter-link.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+    /* ── Search ── */
+    .search-wrap {
+      margin-bottom: 16px;
+      animation: fadeUp .4s .22s ease both;
+    }
+    .search-wrap form { display: flex; gap: 8px; }
+    .search-wrap input { flex: 1; }
+    .btn-search {
+      background: var(--card2); border: 1px solid var(--border);
+      border-radius: 10px; padding: 11px 18px;
+      color: var(--muted); font-family: var(--sans); font-size: 14px;
+      cursor: pointer; transition: all .18s;
+    }
+    .btn-search:hover { border-color: var(--border-h); color: var(--text); }
 
     /* ── List header ── */
     .list-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-      animation: fadeUp .45s .2s ease both;
-    }
-    .list-header span {
-      font-size: 11px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: .09em;
-      color: var(--muted);
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 10px; font-size: 11px;
+      color: var(--muted); font-weight: 600;
+      text-transform: uppercase; letter-spacing: .09em;
     }
 
     /* ── Todo items ── */
-    .list { display: flex; flex-direction: column; gap: 7px; }
+    .list { display: flex; flex-direction: column; gap: 6px; }
 
     .item {
-      display: flex;
-      align-items: center;
-      gap: 13px;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 15px 16px;
-      position: relative;
-      overflow: hidden;
+      display: flex; align-items: flex-start; gap: 12px;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--r); padding: 14px 16px;
+      position: relative; overflow: hidden;
       transition: border-color .2s, transform .15s;
-      animation: slideIn .2s ease both;
+      animation: slideIn .22s ease both;
     }
-    .item::after {
-      content: '';
-      position: absolute;
-      left: 0; top: 0; bottom: 0;
-      width: 3px;
-      background: var(--accent);
-      opacity: 0;
-      transition: opacity .2s;
+    .item::before {
+      content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+      width: 3px; border-radius: 3px 0 0 3px;
+      background: var(--accent); opacity: 0; transition: opacity .2s;
     }
+    .item.prio-haute::before  { background: var(--red);    opacity: 1; }
+    .item.prio-moyenne::before{ background: var(--amber);  opacity: 1; }
+    .item.prio-basse::before  { background: var(--green);  opacity: 1; }
     .item:hover { border-color: var(--border-h); transform: translateX(3px); }
-    .item:hover::after { opacity: 1; }
-    .item.done { opacity: .55; }
-    .item.done::after { background: var(--green); opacity: .6; }
+    .item.done { opacity: .5; }
 
-    /* Toggle */
+    /* Checkbox */
     .toggle-form { display: contents; }
-    .toggle-btn {
-      width: 24px; height: 24px;
-      border-radius: 7px;
-      border: 1.5px solid var(--border-h);
-      background: transparent;
-      cursor: pointer;
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all .18s;
-      padding: 0;
+    .chk {
+      width: 22px; height: 22px; border-radius: 7px;
+      border: 1.5px solid var(--border-h); background: transparent;
+      cursor: pointer; flex-shrink: 0; display: flex;
+      align-items: center; justify-content: center;
+      transition: all .18s; padding: 0; margin-top: 1px;
     }
-    .toggle-btn:hover { border-color: var(--accent); background: rgba(91,143,255,.1); }
-    .item.done .toggle-btn { background: var(--green); border-color: var(--green); }
-    .check { display: none; }
-    .item.done .check { display: block; }
+    .chk:hover { border-color: var(--accent); background: rgba(91,143,255,.1); }
+    .item.done .chk { background: var(--green); border-color: var(--green); }
+    .chk-icon { display: none; }
+    .item.done .chk-icon { display: block; }
 
-    /* Task text + meta */
+    /* Body */
     .task-body { flex: 1; min-width: 0; }
+    .task-top  { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 5px; }
+
     .task-text {
-      font-size: 15px;
-      font-weight: 400;
-      line-height: 1.4;
-      transition: color .2s;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      font-size: 15px; font-weight: 400; line-height: 1.4;
+      flex: 1; min-width: 0;
     }
-    .item.done .task-text {
-      text-decoration: line-through;
-      color: var(--muted);
+    .item.done .task-text { text-decoration: line-through; color: var(--muted); }
+
+    /* Pills */
+    .pill {
+      display: inline-flex; align-items: center;
+      padding: 2px 10px; border-radius: 100px;
+      font-size: 11px; font-weight: 600; flex-shrink: 0;
     }
-    .task-date {
-      font-size: 11px;
-      color: var(--muted);
-      margin-top: 3px;
-      font-weight: 300;
-    }
+    .pill.cat  { background: rgba(91,143,255,.13); color: #7aaeff; }
+    .pill.high { background: rgba(240,91,91,.13);  color: #f07070; }
+    .pill.med  { background: rgba(240,160,64,.13); color: #f0b060; }
+    .pill.low  { background: rgba(62,207,142,.13); color: #50d89e; }
+
+    .task-meta { display: flex; align-items: center; gap: 12px; font-size: 11px; color: var(--muted); }
+    .due { display: flex; align-items: center; gap: 4px; }
+    .due.overdue { color: var(--red); font-weight: 600; }
 
     /* Delete */
     .del-form { display: contents; }
     .del-btn {
-      width: 30px; height: 30px;
-      border-radius: 8px;
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--muted);
-      flex-shrink: 0;
-      transition: all .18s;
-      padding: 0;
+      width: 28px; height: 28px; border-radius: 8px;
+      background: transparent; border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--muted); flex-shrink: 0; transition: all .18s; padding: 0;
     }
-    .del-btn:hover { background: rgba(240,91,91,.15); color: var(--red); }
+    .del-btn:hover { background: rgba(240,91,91,.14); color: var(--red); }
 
     /* ── Empty ── */
     .empty {
-      text-align: center;
-      padding: 60px 20px;
-      border: 1px dashed var(--border);
-      border-radius: 18px;
+      text-align: center; padding: 56px 20px;
+      border: 1px dashed var(--border); border-radius: 18px;
       animation: fadeUp .4s ease both;
     }
     .empty-icon {
-      width: 52px; height: 52px;
-      background: var(--card2);
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 18px;
+      width: 50px; height: 50px; background: var(--card2);
+      border-radius: 14px; display: flex; align-items: center;
+      justify-content: center; margin: 0 auto 16px;
     }
     .empty p { color: var(--muted); font-size: 15px; font-weight: 300; line-height: 1.7; }
 
     /* ── Footer ── */
     footer {
-      margin-top: 52px;
-      padding-top: 22px;
+      margin-top: 48px; padding-top: 20px;
       border-top: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 12px;
-      color: var(--muted);
-      animation: fadeUp .45s .25s ease both;
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 12px; color: var(--muted);
+      animation: fadeUp .4s .28s ease both;
     }
     footer code {
-      background: var(--card2);
-      border: 1px solid var(--border);
-      color: var(--accent);
-      padding: 3px 10px;
-      border-radius: 6px;
-      font-size: 11px;
-      font-family: 'SF Mono', 'Fira Code', monospace;
+      background: var(--card2); border: 1px solid var(--border);
+      color: var(--accent); padding: 3px 10px; border-radius: 6px;
+      font-size: 11px; font-family: 'SF Mono', 'Fira Code', monospace;
     }
 
-    @media (max-width: 480px) {
-      .stats { grid-template-columns: repeat(3, 1fr); }
-      .form-row { flex-direction: column; }
-      .task-date { display: none; }
+    @media (max-width: 560px) {
+      .stats { grid-template-columns: repeat(2, 1fr); }
+      .add-card .row2 { flex-wrap: wrap; }
+      input[type=date] { width: 100%; }
     }
   </style>
 </head>
@@ -345,71 +309,134 @@
     <div class="logo">Task<span>Flow</span></div>
     <div class="badge">
       <span class="live"></span>
-      Actif sur <strong>{{ cloud }}</strong>
+      <strong>{{ cloud }}</strong>&nbsp;· {{ hostname }}
     </div>
   </nav>
 
   <!-- Hero -->
   <div class="hero">
-    <h1>Mes tâches,<br><span class="hi">organisées.</span></h1>
-    <p>Application multi-cloud · Docker · GitHub Actions · {{ hostname }}</p>
+    <h1>Mes tâches,<br><em>organisées.</em></h1>
+    <p>Multi-cloud · Docker · GitHub Actions · v{{ version }}</p>
   </div>
 
   <!-- Stats -->
   <div class="stats">
-    <div class="stat">
-      <div class="n blue">{{ total }}</div>
-      <div class="l">Total</div>
+    <div class="stat"><div class="n blue">{{ total }}</div><div class="l">Total</div></div>
+    <div class="stat"><div class="n green">{{ done }}</div><div class="l">Faites</div></div>
+    <div class="stat"><div class="n amber">{{ pending }}</div><div class="l">Restantes</div></div>
+    <div class="stat"><div class="n red">{{ overdue }}</div><div class="l">En retard</div></div>
+  </div>
+
+  <!-- Progress -->
+  <div class="progress-wrap">
+    <div class="progress-info">
+      <span>Progression globale</span>
+      <strong>{{ progress }}%</strong>
     </div>
-    <div class="stat">
-      <div class="n green">{{ done_count }}</div>
-      <div class="l">Faites</div>
-    </div>
-    <div class="stat">
-      <div class="n amber">{{ pending }}</div>
-      <div class="l">Restantes</div>
+    <div class="progress-track">
+      <div class="progress-fill"></div>
     </div>
   </div>
 
-  <!-- Formulaire -->
-  <form class="form-row" action="/add" method="POST">
-    <input type="text" name="task" placeholder="Nouvelle tâche..." autocomplete="off" autofocus required>
-    <button type="submit">+ Ajouter</button>
+  <!-- Add form -->
+  <form action="/add" method="POST">
+    <div class="add-card">
+      <div class="row1">
+        <input type="text" name="task" placeholder="Ajouter une nouvelle tâche..." autocomplete="off" required autofocus>
+        <button type="submit" class="btn-add">+ Ajouter</button>
+      </div>
+      <div class="row2">
+        <select name="category">
+          {% for cat in categories %}
+          <option value="{{ cat }}">📁 {{ cat }}</option>
+          {% endfor %}
+        </select>
+        <select name="priority">
+          <option value="haute">🔴 Haute priorité</option>
+          <option value="moyenne" selected>🟡 Moyenne priorité</option>
+          <option value="basse">🟢 Basse priorité</option>
+        </select>
+        <input type="date" name="due_date">
+      </div>
+    </div>
   </form>
 
-  <!-- Liste -->
+  <!-- Search -->
+  <div class="search-wrap">
+    <form method="GET" action="/">
+      <input type="text" name="q" value="{{ search }}" placeholder="🔍  Rechercher une tâche...">
+      <input type="hidden" name="filter" value="{{ filter_s }}">
+      <input type="hidden" name="category" value="{{ cat_filter }}">
+      <input type="hidden" name="priority" value="{{ prio_filter }}">
+      <button type="submit" class="btn-search">Chercher</button>
+    </form>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters">
+    <a href="/?filter=all&category={{ cat_filter }}&priority={{ prio_filter }}&q={{ search }}"
+       class="filter-link {{ 'active' if filter_s == 'all' else '' }}">Toutes</a>
+    <a href="/?filter=active&category={{ cat_filter }}&priority={{ prio_filter }}&q={{ search }}"
+       class="filter-link {{ 'active' if filter_s == 'active' else '' }}">Actives</a>
+    <a href="/?filter=done&category={{ cat_filter }}&priority={{ prio_filter }}&q={{ search }}"
+       class="filter-link {{ 'active' if filter_s == 'done' else '' }}">Terminées</a>
+    <span style="width:1px;background:var(--border);margin:0 4px"></span>
+    {% for cat in categories %}
+    <a href="/?filter={{ filter_s }}&category={{ cat }}&priority={{ prio_filter }}&q={{ search }}"
+       class="filter-link {{ 'active' if cat_filter == cat else '' }}">{{ cat }}</a>
+    {% endfor %}
+    {% if cat_filter != 'all' %}
+    <a href="/?filter={{ filter_s }}&category=all&priority={{ prio_filter }}&q={{ search }}"
+       class="filter-link">✕ Catégorie</a>
+    {% endif %}
+  </div>
+
+  <!-- List -->
   {% if todos %}
   <div class="list-header">
-    <span>{{ total }} tâche{{ 's' if total > 1 else '' }}</span>
-    <span>{{ done_count }} terminée{{ 's' if done_count > 1 else '' }}</span>
+    <span>{{ todos|length }} tâche{{ 's' if todos|length > 1 else '' }}</span>
+    <span>{% if search %}Résultats pour "{{ search }}"{% endif %}</span>
   </div>
 
   <div class="list">
     {% for todo in todos %}
-    <div class="item {{ 'done' if todo.done else '' }}">
+    <div class="item {{ 'done' if todo.done else '' }} prio-{{ todo.priority }}">
 
-      <!-- Toggle -->
       <form class="toggle-form" action="/toggle/{{ todo.id }}" method="POST">
-        <button type="submit" class="toggle-btn">
-          <svg class="check" width="12" height="12" viewBox="0 0 12 12" fill="none">
+        <button type="submit" class="chk">
+          <svg class="chk-icon" width="12" height="12" viewBox="0 0 12 12" fill="none">
             <path d="M2 6l3 3 5-5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </button>
       </form>
 
-      <!-- Texte -->
       <div class="task-body">
-        <div class="task-text">{{ todo.task }}</div>
-        {% if todo.created_at is defined %}
-        <div class="task-date">{{ todo.created_at }}</div>
-        {% endif %}
+        <div class="task-top">
+          <span class="task-text">{{ todo.task }}</span>
+          <span class="pill cat">{{ todo.category }}</span>
+          {% if todo.priority == 'haute' %}
+            <span class="pill high">↑ Haute</span>
+          {% elif todo.priority == 'moyenne' %}
+            <span class="pill med">→ Moyenne</span>
+          {% else %}
+            <span class="pill low">↓ Basse</span>
+          {% endif %}
+        </div>
+        <div class="task-meta">
+          <span>{{ todo.created_at }}</span>
+          {% if todo.due_display %}
+          <span class="due {{ 'overdue' if todo.overdue else '' }}">
+            {% if todo.overdue %}⚠ En retard · {% endif %}
+            Échéance : {{ todo.due_display }}
+          </span>
+          {% endif %}
+        </div>
       </div>
 
-      <!-- Supprimer -->
       <form class="del-form" action="/delete/{{ todo.id }}" method="POST">
         <button type="submit" class="del-btn" title="Supprimer">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-            <path d="M2 2l10 10M12 2L2 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+            <path d="M2 2l9 9M11 2L2 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
           </svg>
         </button>
       </form>
@@ -426,7 +453,11 @@
         <rect x="2" y="2" width="18" height="18" rx="5" stroke="#5b8fff" stroke-width="1.5"/>
       </svg>
     </div>
-    <p>Aucune tâche pour l'instant.<br>Ajoute ta première tâche ci-dessus.</p>
+    <p>
+      {% if search %}Aucune tâche trouvée pour "{{ search }}".
+      {% else %}Aucune tâche pour l'instant.<br>Ajoute ta première tâche ci-dessus !
+      {% endif %}
+    </p>
   </div>
   {% endif %}
 
