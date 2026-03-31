@@ -37,10 +37,8 @@ jobs:
         run: |
           docker push ${{ secrets.DOCKER_USERNAME }}/multicloud-todolist-app-todo-app:latest
 
-  # -------------------------------------------------------
   # JOB 2 : Déclencher le redéploiement sur Render
   # (attend que le Job 1 soit terminé)
-  # -------------------------------------------------------
   deploy-render:
     name: Deploy to Render
     runs-on: ubuntu-latest
@@ -70,6 +68,6 @@ jobs:
 
       - name: Deploy to Railway
         run: |
-          railway up --detach --service multicloud-todo
+          railway up --service "multicloud-todo" --detach
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
