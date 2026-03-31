@@ -1,0 +1,15 @@
+Créer la VM 1 (vm-render)
+Nom de la VM   : vm-render
+utilisateur : yavo
+mot de passe : yavo123
+@IP: inet 192.168.204.130/24 brd 192.168.204.255 scope global dynamic noprefixroute ens33
+lien : http://192.168.204.130:5000
+
+-------------------------------------------------
+Créer la VM 2 (vm-railway)
+Nom de la VM   : vm-railway
+utilisateur : yavo
+mot de passe : yavo123
+@IP: inet 192.168.204.131/24 brd 192.168.204.255 scope global dynamic noprefixroute ens33
+lien : http://192.168.204.131:5000
+
