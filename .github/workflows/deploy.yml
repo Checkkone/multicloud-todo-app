@@ -68,6 +68,6 @@ jobs:
 
       - name: Deploy to Railway
         run: |
-          railway up --service "multicloud-todo" --detach
+          railway up --service 26ab546d-6f17-4858-81ef-fd6fb353012c --detach
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
