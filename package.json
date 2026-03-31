@@ -1,5 +1,8 @@
 {
   "status": "ok",
   "cloud": "local",
-  "hostname": "abc123"
+  "total": 5,
+  "done": 3,
+  "pending": 2,
+  "progress": 60
 }
